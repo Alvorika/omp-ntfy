@@ -6,7 +6,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.1.0] - 2026-08-29
 
-First release: notify your devices when an Oh My Pi agent finishes a task.
+Initial experimental version: notify your devices when an Oh My Pi agent
+finishes a task. No tagged release — expect breaking changes while this
+stabilizes.
 
 ### Added
 
