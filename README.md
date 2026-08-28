@@ -66,8 +66,8 @@ install -m755 target/release/omp-ntfy ~/.local/bin/omp-ntfy
 Requires a Rust toolchain (1.97+, edition 2024) only at build time; the
 binary has zero runtime dependencies. No root needed anywhere.
 
-Release artifacts are built by `scripts/build-release.sh` (tarball + sha256,
-glibc per default; `--musl` for a fully static binary).
+Standalone build artifacts (binary + docs, tarball + sha256) are produced
+by `scripts/build-release.sh`; `--musl` for a fully static binary.
 
 ## 1. Run the server (native)
 

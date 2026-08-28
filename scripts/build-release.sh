@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build an omp-ntfy release artifact: binary + docs, one tarball + sha256.
+# Build an omp-ntfy standalone artifact: binary + docs, one tarball + sha256.
 #
 # Native build:    ./scripts/build-release.sh              (glibc, this platform)
 # Static musl:     ./scripts/build-release.sh --musl       (needs musl toolchain)
