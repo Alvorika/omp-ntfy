@@ -1,0 +1,13 @@
+/target
+dist/
+*.bad
+*.tmp
+
+# local runtime state (never commit; lives under XDG dirs)
+config.json
+client.json
+store.json
+
+# secrets
+.env
+.env.*

@@ -1,0 +1,24 @@
+# Docker alternative deployment. Same configuration semantics as native:
+# OMP_NTFY_CONFIG_DIR / OMP_NTFY_DATA_DIR / OMP_NTFY_BIND / OMP_NTFY_TOKEN.
+# Subscription database + VAPID keys persist in the `omp-ntfy-data` volume.
+#
+# First run:   docker compose up -d --build
+# Config:      set OMP_NTFY_TOKEN (e.g. in .env: OMP_NTFY_TOKEN=secret)
+# Reconfigure: bind + token are read from env on every start.
+services:
+  omp-ntfy:
+    build: .
+    ports:
+      - "${OMP_NTFY_PORT:-8090}:8090"
+    environment:
+      OMP_NTFY_CONFIG_DIR: /data
+      OMP_NTFY_DATA_DIR: /data
+      OMP_NTFY_BIND: "0.0.0.0:8090"
+      OMP_NTFY_TOKEN: "${OMP_NTFY_TOKEN:?set OMP_NTFY_TOKEN in .env or your environment}"
+    volumes:
+      - omp-ntfy-data:/data
+    restart: unless-stopped
+    # The image entrypoint generates VAPID keys + token on first boot.
+
+volumes:
+  omp-ntfy-data:

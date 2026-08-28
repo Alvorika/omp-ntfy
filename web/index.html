@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111418">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<title>omp-ntfy</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main class="card">
+  <header>
+    <h1>omp-ntfy</h1>
+    <span id="server-state" class="pill">checking…</span>
+  </header>
+  <section class="rows">
+    <div class="row"><span>Notifications</span><strong id="perm-state">…</strong></div>
+    <div class="row"><span>Subscribed</span><strong id="sub-state">…</strong></div>
+    <label>Device name
+      <input id="device-name" placeholder="Mac / iPhone" maxlength="40" autocomplete="off">
+    </label>
+  </section>
+  <button id="toggle" disabled>…</button>
+  <p id="hint" class="hint"></p>
+  <footer id="last" class="muted"></footer>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>
