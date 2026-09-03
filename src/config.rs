@@ -42,6 +42,12 @@ impl Paths {
     pub fn client_file(&self) -> PathBuf {
         self.config_dir.join("client.json")
     }
+
+    pub fn settings_file(&self) -> PathBuf {
+        // Settings carry no secrets and live in the writable state dir: the
+        // systemd unit hardens the config dir read-only (ProtectHome).
+        self.data_dir.join("settings.json")
+    }
 }
 
 fn env_dir(var: &str) -> Option<PathBuf> {

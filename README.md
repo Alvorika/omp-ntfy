@@ -11,14 +11,17 @@ Get a Web Push notification on your Mac/iPhone when an Oh My Pi (OMP)
 agent finishes a task on a remote machine.
 
 ```
-OMP agent (remote box)
-  │  OMP extension (official event API, no OMP internals touched)
-  │  POST /api/events  (Bearer token, 3s timeout, failures swallowed)
-  ▼
-omp-ntfy server (single static binary, systemd user service or container)
-  │  RFC 8030 + RFC 8291: VAPID-signed, aes128gcm-encrypted Web Push
-  ▼
-PWA / Service Worker  →  macOS / iPhone notification
+OMP agent (remote box)                    persistent sessions (~/.omp/agent)
+  │ OMP extension (official event API)    │ scan transcripts
+  │ POST /api/events (stop)               │  + runtime snapshots
+  │ POST /api/runtime (coalesced ≤5s)     ▼
+  └──────────────┬──────────────────────────────────┐
+                 ▼                                  │
+omp-ntfy server ─┼─ reads OMP stats.db (read-only)  │
+  │  Web Push (VAPID + RFC 8291)      │ merge       │
+  │  /api/sessions /api/stats /api/settings /api/omp-binding
+  ▼                                    ▼
+PWA Dashboard + Settings            macOS / iPhone notification
 ```
 
 Single-user, self-hosted, deliberately small. v0 scope: notify on task
@@ -131,7 +134,28 @@ omp-ntfy token-rotate  # rotate it (update client configs afterwards!)
 omp-ntfy push-test     # send a test notification to all devices
 ```
 
-## 3. Install / subscribe the PWA
+## 3. Dashboard & Settings
+
+After `serve`, open the server over HTTPS (see §4). Two hash-routed views:
+
+- **`#/` Dashboard** — sessions from the local OMP installation: title,
+  latest user prompt, optional agent response preview (deterministic first
+  meaningful line, no LLM), workspace, model, lifecycle state, elapsed /
+  activity time, plus a compact usage summary from OMP's `stats.db`
+  (requests, tokens, cache reads, est. cost, main vs subagent) and OMP
+  binding status. "Live" markers come only from the extension's runtime
+  reports — the server never infers running state from file timestamps.
+- **`#/settings` Settings** — notification behavior (enable push, session
+  title, latest user message, agent response preview + length, terminal
+  states) and dashboard field visibility. Persisted server-side in the
+  state dir; survives restarts. The subscription card from earlier versions
+  lives here, unchanged.
+
+Notification content defaults: title `OMP · <session title>`, body = the
+latest user message. Turn on "Include agent response preview" to prepend the
+first meaningful line of the final reply. No reasoning content is ever sent.
+
+## 4. Install / subscribe the PWA
 
 Open the server through HTTPS on the device you want to subscribe.
 `localhost` may be used for local development only — browsers require a
@@ -151,7 +175,7 @@ The status card shows: server reachability, permission state, and
 whether this device is subscribed. "Device name" is stored locally and
 sent with the subscription for `omp-ntfy subs`.
 
-## 4. Install the OMP extension (per machine)
+## 5. Install the OMP extension (per machine)
 
 On every machine that runs OMP (the remote box(es)):
 
@@ -173,7 +197,7 @@ Profile support: `--profile <name>` installs into
 `~/.omp/profiles/<name>/agent/extensions`; `--agent-dir <path>` overrides
 anything (`PI_CODING_AGENT_DIR` is honored too).
 
-## 5. Security model (v0)
+## 6. Security model (v0)
 
 - OMP → server: HTTPS (or Tailscale) + `Authorization: Bearer <token>`,
   constant-time comparison, strict JSON validation, 16 KiB body limit.
@@ -186,7 +210,7 @@ anything (`PI_CODING_AGENT_DIR` is honored too).
 - Extension: 3-second timeout; network failures are logged and never
   affect the OMP session.
 
-## 6. End-to-end test procedure
+## 7. End-to-end test procedure
 
 Boundary (no device needed):
 
@@ -214,7 +238,7 @@ Full acceptance (the success criterion):
 6. Kill the server, re-run — OMP finishes normally, no crash, log line
    `[omp-ntfy] notification failed: …` in `~/.omp/logs`.
 
-## 7. Files & layout
+## 8. Files & layout
 
 ```
 Cargo.toml / src/     Rust: config, store, push (crypto), server, systemd, omp CLI

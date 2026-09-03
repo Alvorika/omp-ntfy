@@ -4,6 +4,47 @@ All notable changes to omp-ntfy are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-09-03
+
+Experimental companion dashboard for the local OMP installation.
+
+### Added
+
+- **Dashboard** (PWA view `#/`): persistent OMP session list (title, latest
+  user prompt, optional agent response preview, cwd, model, state, elapsed /
+  last-modified), a compact usage summary read directly from OMP's
+  `stats.db` (requests, tokens, cache reads, est. cost, main vs subagent),
+  and OMP binding status (agent dir, extension install state, client config).
+- **Settings** (PWA view `#/settings`): notification behavior (enable,
+  session title, latest user message, optional agent response preview with
+  configurable length, terminal states) and dashboard field visibility.
+  Persisted as `settings.json` in the state dir (survives restarts); the
+  subscription card moved here unchanged.
+- **Notification content**: title carries the session title; body defaults
+  to the latest user message. Optional deterministic agent response preview
+  (first meaningful line, configurable length) — no LLM summarization, no
+  reasoning content.
+- **Persistent session discovery**: the server scans the OMP session
+  transcripts (`~/.omp/agent/sessions/**/*.jsonl`) and merges them with
+  extension runtime reports. Sessions survive server restarts and show even
+  with no OMP process running; terminal states are never guessed.
+- **Live runtime registry** (memory only, distinct from persistent state):
+  the extension v0.2.0 reports small coalesced snapshots (session id, title,
+  latest user prompt, assistant preview, activity, model, timestamps) on
+  session start / user message / turn / agent end / stop; "running" is only
+  ever derived from real extension events, never from file timestamps.
+- **New server endpoints**: `POST /api/runtime` (Bearer), `GET
+  /api/sessions`, `GET /api/stats`, `GET`/`PUT /api/settings`, `GET
+  /api/omp-binding` (all reads unauthenticated, same posture as existing
+  status/subscribe endpoints).
+- Dependency: `rusqlite` (bundled) for read-only `stats.db` aggregation.
+
+### Changed
+
+- Extension bumped to v0.2.0 (`OMP_NTFY_EXT_VERSION`) with runtime reporting;
+  the `session_stop` completion flow is unchanged.
+- `status` endpoint now also reports session count.
+
 ## [0.1.0] - 2026-08-29
 
 Initial experimental version: notify your devices when an Oh My Pi agent

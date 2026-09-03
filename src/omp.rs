@@ -6,7 +6,7 @@ use std::path::{Path, PathBuf};
 use crate::config::Paths;
 
 const EXT_NAME: &str = "omp-ntfy.ts";
-const EXT_VERSION: &str = "0.1.0";
+const EXT_VERSION: &str = "0.2.0";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ClientConfig {

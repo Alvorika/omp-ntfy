@@ -14,22 +14,59 @@
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<main class="card">
-  <header>
-    <h1>omp-ntfy</h1>
-    <span id="server-state" class="pill">checking…</span>
-  </header>
-  <section class="rows">
-    <div class="row"><span>Notifications</span><strong id="perm-state">…</strong></div>
-    <div class="row"><span>Subscribed</span><strong id="sub-state">…</strong></div>
-    <label>Device name
-      <input id="device-name" placeholder="Mac / iPhone" maxlength="40" autocomplete="off">
-    </label>
+<header class="topbar">
+  <h1>omp-ntfy</h1>
+  <nav>
+    <a href="#/" data-view="dashboard">Dashboard</a>
+    <a href="#/settings" data-view="settings">Settings</a>
+  </nav>
+  <span id="server-state" class="pill">checking…</span>
+</header>
+
+<main>
+  <section id="view-dashboard" class="view hidden">
+    <div class="grid2">
+      <div class="card">
+        <h2>Usage</h2>
+        <div id="stats-body" class="stats"><p class="muted">no data</p></div>
+      </div>
+      <div class="card">
+        <h2>OMP binding</h2>
+        <div id="binding-body" class="rows small"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Sessions <span id="session-count" class="muted"></span></h2>
+      <div id="sessions-body"><p class="muted">loading…</p></div>
+    </div>
   </section>
-  <button id="toggle" disabled>…</button>
-  <p id="hint" class="hint"></p>
-  <footer id="last" class="muted"></footer>
+
+  <section id="view-settings" class="view hidden">
+    <div class="card">
+      <h2>Notifications</h2>
+      <div id="settings-notify" class="rows"></div>
+    </div>
+    <div class="card">
+      <h2>Dashboard</h2>
+      <div id="settings-dash" class="rows"></div>
+    </div>
+    <div class="card">
+      <h2>This device</h2>
+      <div class="rows">
+        <div class="row"><span>Notifications</span><strong id="perm-state">…</strong></div>
+        <div class="row"><span>Subscribed</span><strong id="sub-state">…</strong></div>
+        <label>Device name
+          <input id="device-name" placeholder="Mac / iPhone" maxlength="40" autocomplete="off">
+        </label>
+      </div>
+      <button id="toggle" disabled>…</button>
+      <p id="hint" class="hint"></p>
+    </div>
+    <p id="settings-save-state" class="muted"></p>
+  </section>
 </main>
+
+<footer id="last" class="muted"></footer>
 <script src="/app.js"></script>
 </body>
 </html>
