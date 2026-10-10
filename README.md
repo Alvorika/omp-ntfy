@@ -1,5 +1,12 @@
 # omp-ntfy
 
+[!NOTE]
+
+**Project Archived**
+
+This repository is intended solely for sharing ideas. As I no longer have the time to maintain this project, it has been archived.
+
+
 > Web Push notifications when an Oh My Pi (OMP) agent finishes a task.
 > [GitHub](https://github.com/Alvorika/omp-ntfy) · [Changelog](CHANGELOG.md) · MIT License
 
